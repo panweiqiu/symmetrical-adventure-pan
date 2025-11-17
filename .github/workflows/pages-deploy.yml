@@ -1,1 +1,31 @@
+name: Deploy to GitHub Pages
 
+# 当 push 到 main 时触发
+on:
+  push:
+    branches: [ main ]
+
+# 给 workflow 足够权限以推送 gh-pages / 更新 Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 如果你需要 build（比如 React/Vue），在这里添加 build 步骤 (node setup & npm install/build)
+      # 例如：
+      # - uses: actions/setup-node@v4
+      # - run: npm ci
+      # - run: npm run build
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./   # 如果站点在子目录（例如 build 或 dist），改成 ./dist
